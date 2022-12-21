@@ -1,5 +1,5 @@
-MCU=atmega328p
-F_CPU=8000000
+MCU=atmega32u4
+F_CPU=16000000
 
 CC=avr-gcc
 OBJCOPY=avr-objcopy
@@ -8,6 +8,8 @@ CFLAGS=-Wall -g -Os -mmcu=${MCU} -DF_CPU=${F_CPU} -I.
 
 AVRDUDE_FLAGS=-B 2
 
+PORT=COM15
+PROGRAMMER=avr109
 TARGET=main
 SRC_DIRS=.
 BUILD_DIR=./build
@@ -25,10 +27,10 @@ $(BUILD_DIR)/%.c.o: %.c
 	${CC} ${CFLAGS} -c $< -o $@
 
 flash:
-	avrdude.exe -p ${MCU} ${AVRDUDE_FLAGS} -c usbasp -U flash:w:${BUILD_DIR}/${TARGET}.hex:i -F -P usb
+	avrdude.exe -p ${MCU} ${AVRDUDE_FLAGS} -c ${PROGRAMMER} -U flash:w:${BUILD_DIR}/${TARGET}.hex:i -P ${PORT}
 
 reset:
-	avrdude.exe -p ${MCU} ${AVRDUDE_FLAGS} -c usbasp -P usb
+	avrdude.exe -p ${MCU} ${AVRDUDE_FLAGS} -c ${PROGRAMMER} -P ${PORT}
 
 .PHONY: clean
 

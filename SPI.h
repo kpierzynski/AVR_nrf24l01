@@ -19,10 +19,11 @@
 #define DDR_SS DDRB
 #define PORT_SS PORTB
 
-void spi_init();
+void SPI_init();
 
-void spi_ss_set(uint8_t state);
-void spi_w_byte(uint8_t byte);
-uint8_t spi_rw_byte(uint8_t byte);
+void SPI_ss_set(uint8_t state);
+void SPI_w_byte(uint8_t byte);
+uint8_t SPI_rw_byte(uint8_t byte);
+void SPI_rw_buffer(uint8_t *rbuf, uint8_t *wbuf, uint8_t len);
 
 #endif

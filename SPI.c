@@ -1,6 +1,6 @@
 #include "SPI.h"
 
-void spi_init()
+void SPI_init()
 {
 	DDR_SCK |= SCK;
 	DDR_MOSI |= MOSI;
@@ -16,7 +16,7 @@ void spi_init()
 	SPSR |= (1 << SPI2X);
 }
 
-void spi_ss_set(uint8_t state)
+void SPI_ss_set(uint8_t state)
 {
 	if (state)
 		PORT_SS |= SS;
@@ -24,17 +24,23 @@ void spi_ss_set(uint8_t state)
 		PORT_SS &= ~(SS);
 }
 
-void spi_w_byte(uint8_t byte)
+void SPI_w_byte(uint8_t byte)
 {
 	SPDR = byte;
 	while (!(SPSR & (1 << SPIF)))
 		;
 }
 
-uint8_t spi_rw_byte(uint8_t byte)
+uint8_t SPI_rw_byte(uint8_t byte)
 {
 	SPDR = byte;
 	while (!(SPSR & (1 << SPIF)))
 		;
 	return SPDR;
+}
+
+void SPI_rw_buffer(uint8_t *rbuf, uint8_t *wbuf, uint8_t len)
+{
+	for (uint8_t i = 0; i < len; i++)
+		rbuf[i] = SPI_rw_byte(wbuf[i]);
 }

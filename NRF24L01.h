@@ -7,6 +7,7 @@
 #include <util/delay.h>
 
 #include "NRF24L01_register_map_table.h"
+#include "SPI.h"
 
 #define CE_DDR DDRB
 #define CE_PORT PORTB
@@ -34,11 +35,24 @@
 void register_nrf_rx_event_callback(void (*callback)(void *buf, uint8_t len));
 
 void NRF_init();
+
 void NRF_puts(char *buf, uint8_t len);
 void NRF_rx_event(char *buf);
 
+void NRF_tx_up();
+void NRF_rx_up();
+
+uint8_t NRF_read_reg(uint8_t reg);
+void NRF_read_reg_to_buf(uint8_t reg, uint8_t *buf, uint8_t len);
+
+void NRF_write_reg(uint8_t reg, uint8_t data);
+void NRF_write_reg_from_buf(uint8_t reg, uint8_t *buf, uint8_t len);
+
 void NRF_set_tx_address(char *address);
 void NRF_set_rx_address(char *address[]);
+
+void NRF_tx_flush();
+void NRF_rx_flush();
 
 void NRF_set_crc_bytes(uint8_t amount);
 void NRF_set_channel(uint8_t channel);
