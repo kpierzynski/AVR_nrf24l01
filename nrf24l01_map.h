@@ -1,14 +1,7 @@
-/*
- * NRF24L01_register_map_table.h
- *
- *  Created on: 4 sie 2019
- *      Author: kpier
- */
-
 #ifndef NRF24L01_NRF24L01_REGISTER_MAP_TABLE_H_
 #define NRF24L01_NRF24L01_REGISTER_MAP_TABLE_H_
 
-//REGISTERS
+// REGISTERS
 //-----------------------------------------
 #define REG_CONFIG 0x00
 
@@ -19,6 +12,9 @@
 #define CRCO 2
 #define PWR_UP 1
 #define PRIM_RX 0
+
+#define CRC_1_BYTE 0
+#define CRC_2_BYTE 1
 //-----------------------------------------
 
 //-----------------------------------------
@@ -47,6 +43,10 @@
 #define REG_SETUP_AW 0x03
 
 #define AW 0
+
+#define ADDRESS_LENGTH_3_BYTES 0b01
+#define ADDRESS_LENGTH_4_BYTES 0b10
+#define ADDRESS_LENGTH_5_BYTES 0b11
 //-----------------------------------------
 
 //-----------------------------------------
@@ -55,39 +55,39 @@
 #define ARD 4
 #define ARC 0
 
-#define RETR_TIME_250uS		0x00
-#define RETR_TIME_500uS		0x01
-#define RETR_TIME_750uS		0x02
-#define RETR_TIME_1000uS	0x03
-#define RETR_TIME_1250uS	0x04
-#define RETR_TIME_1500uS	0x05
-#define RETR_TIME_1750uS	0x06
-#define RETR_TIME_2000uS	0x07
-#define RETR_TIME_2250uS	0x08
-#define RETR_TIME_2500uS	0x09
-#define RETR_TIME_2750uS	0x0A
-#define RETR_TIME_3000uS	0x0B
-#define RETR_TIME_3250uS	0x0C
-#define RETR_TIME_3500uS	0x0D
-#define RETR_TIME_3750uS	0x0E
-#define RETR_TIME_4000uS	0x0F
+#define RETR_TIME_250uS 0x00
+#define RETR_TIME_500uS 0x01
+#define RETR_TIME_750uS 0x02
+#define RETR_TIME_1000uS 0x03
+#define RETR_TIME_1250uS 0x04
+#define RETR_TIME_1500uS 0x05
+#define RETR_TIME_1750uS 0x06
+#define RETR_TIME_2000uS 0x07
+#define RETR_TIME_2250uS 0x08
+#define RETR_TIME_2500uS 0x09
+#define RETR_TIME_2750uS 0x0A
+#define RETR_TIME_3000uS 0x0B
+#define RETR_TIME_3250uS 0x0C
+#define RETR_TIME_3500uS 0x0D
+#define RETR_TIME_3750uS 0x0E
+#define RETR_TIME_4000uS 0x0F
 
-#define RETR_COUNT_DISABLED	0x00
-#define RETR_COUNT_1		0x01
-#define RETR_COUNT_2		0x02
-#define RETR_COUNT_3		0x03
-#define RETR_COUNT_4		0x04
-#define RETR_COUNT_5		0x05
-#define RETR_COUNT_6		0x06
-#define RETR_COUNT_7		0x07
-#define RETR_COUNT_8		0x08
-#define RETR_COUNT_9		0x09
-#define RETR_COUNT_10		0x0A
-#define RETR_COUNT_11		0x0B
-#define RETR_COUNT_12		0x0C
-#define RETR_COUNT_13		0x0D
-#define RETR_COUNT_14		0x0E
-#define RETR_COUNT_15		0x0F
+#define RETR_COUNT_DISABLED 0x00
+#define RETR_COUNT_1 0x01
+#define RETR_COUNT_2 0x02
+#define RETR_COUNT_3 0x03
+#define RETR_COUNT_4 0x04
+#define RETR_COUNT_5 0x05
+#define RETR_COUNT_6 0x06
+#define RETR_COUNT_7 0x07
+#define RETR_COUNT_8 0x08
+#define RETR_COUNT_9 0x09
+#define RETR_COUNT_10 0x0A
+#define RETR_COUNT_11 0x0B
+#define RETR_COUNT_12 0x0C
+#define RETR_COUNT_13 0x0D
+#define RETR_COUNT_14 0x0E
+#define RETR_COUNT_15 0x0F
 //-----------------------------------------
 
 //-----------------------------------------
@@ -105,14 +105,14 @@
 #define RF_DR_HIGH 3
 #define RF_PWR 1
 
-#define POWER_neg18dBm	0b00
-#define POWER_neg12dBm	0b01
-#define POWER_neg6dBm	0b10
-#define POWER_0dBm		0b11
+#define POWER_neg18dBm 0b00
+#define POWER_neg12dBm 0b01
+#define POWER_neg6dBm 0b10
+#define POWER_0dBm 0b11
 
-#define SPEED_1mbps		0b00
-#define SPEED_2mbps		0b01
-#define SPEED_250kbps	0b10
+#define SPEED_1mbps 0b000
+#define SPEED_2mbps 0b001
+#define SPEED_250kbps 0b100
 
 //-----------------------------------------
 
@@ -232,19 +232,20 @@
 #define EN_DYN_ACK 0
 //-----------------------------------------
 
-//COMANDS
+// COMANDS
 //-----------------------------------------
-#define CMD_R_REG				0b00000000
-#define CMD_W_REG				0b00100000
-#define CMD_R_RX_PAYLOAD		0b01100001
-#define CMD_W_TX_PAYLOAD		0b10100000
-#define CMD_FLUSH_TX			0b11100001
-#define CMD_FLUSH_RX			0b11100010
-#define CMD_REUSE_TX_PL			0b11100011
-#define CMD_R_RX_PL_WID			0b01100000
-#define CMD_W_ACK_PAYLOAD		0b10101000
-#define CMD_W_TX_PAYLOAD_NO_ACK	0b10110000
-#define CMD_NOP					0b11111111
+#define CMD_R_REGISTER 0b00000000
+#define CMD_W_REGISTER 0b00100000
+#define CMD_REGISTER_MASK 0b00011111
+#define CMD_R_RX_PAYLOAD 0b01100001
+#define CMD_W_TX_PAYLOAD 0b10100000
+#define CMD_FLUSH_TX 0b11100001
+#define CMD_FLUSH_RX 0b11100010
+#define CMD_REUSE_TX_PL 0b11100011
+#define CMD_R_RX_PL_WID 0b01100000
+#define CMD_W_ACK_PAYLOAD 0b10101000
+#define CMD_W_TX_PAYLOAD_NO_ACK 0b10110000
+#define CMD_NOP 0xFF
 //-----------------------------------------
 
 #endif /* NRF24L01_NRF24L01_REGISTER_MAP_TABLE_H_ */

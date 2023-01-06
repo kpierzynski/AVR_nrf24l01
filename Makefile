@@ -1,4 +1,4 @@
-MCU=atmega32u4
+MCU=atmega328p
 F_CPU=16000000
 
 CC=avr-gcc
@@ -8,8 +8,8 @@ CFLAGS=-Wall -g -Os -mmcu=${MCU} -DF_CPU=${F_CPU} -I.
 
 AVRDUDE_FLAGS=-B 2
 
-PORT=COM15
-PROGRAMMER=avr109
+PORT=COM13
+PROGRAMMER=arduino
 TARGET=main
 SRC_DIRS=.
 BUILD_DIR=./build

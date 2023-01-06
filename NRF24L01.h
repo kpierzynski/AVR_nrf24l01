@@ -1,65 +1,51 @@
-#ifndef NRF24L01_NRF24L01_H_
-#define NRF24L01_NRF24L01_H_
+#ifndef NRF24L01_H
+#define NRF24L01_H
 
 #include <avr/io.h>
-#include <avr/pgmspace.h>
 #include <string.h>
-#include <util/delay.h>
 
-#include "NRF24L01_register_map_table.h"
-#include "SPI.h"
+#include "nrf24l01_map.h"
 
-#define CE_DDR DDRB
-#define CE_PORT PORTB
-#define CE_PIN PINB
-#define CE (1 << PB2)
+#define CSN SS
+#define DDR_CSN DDR_SS
+#define PORT_CSN PORT_SS
+#define PIN_CSN PIN_SS
 
-#define SPI_SS_LOW 0
-#define SPI_SS_HIGH 1
+#define CE PB2
+#define DDR_CE DDRB
+#define PORT_CE PORTB
+#define PIN_CE PINB
 
-#define CE_LOW CE_PORT &= ~(CE);
-#define CE_HIGH CE_PORT |= CE;
+#define CSN_LOW PORT_CSN &= ~(1 << CSN)
+#define CSN_HIGH PORT_CSN |= (1 << CSN)
 
-#define CRC_1_BYTE 0
-#define CRC_2_BYTES 1
+#define CE_LOW PORT_CE &= ~(1 << CE)
+#define CE_HIGH PORT_CE |= (1 << CE)
 
-#define ACK_DISABLE 0
-#define ACK_ENABLE 1
+void nrf24l01_init(void);
 
-#define PIPE_DISABLE 0
-#define PIPE_ENABLE 1
+void nrf24l01_set_channel(uint8_t channel);
+void nrf24l01_set_crc_length(uint8_t len);
+void nrf24l01_set_retr_and_delay(uint8_t retr, uint8_t delay);
+void nrf24l01_set_speed_and_power(uint8_t speed, uint8_t power);
+void nrf24l01_set_address_length(uint8_t len);
 
-#define DYNPL_DISABLE 0
-#define DYNPL_ENABLE 1
+void nrf24l01_set_tx_addr(char *address);
+void nrf24l01_set_main_rx_addr(char *address);
+
+void nrf24l01_enable_pipe(uint8_t pipe);
+void nrf24l01_enable_dynamic_payload_length(uint8_t pipe);
+
+void nrf24l01_rx_up();
+void nrf24l01_tx_up();
+void nrf24l01_standby();
+
+void nrf24l01_flush_rx();
+void nrf24l01_flush_tx();
+
+void nrf24l01_puts(uint8_t *buf, uint8_t len);
+void nrf24l01_event();
 
 void register_nrf_rx_event_callback(void (*callback)(void *buf, uint8_t len));
-
-void NRF_init();
-
-void NRF_puts(char *buf, uint8_t len);
-void NRF_rx_event(char *buf);
-
-void NRF_tx_up();
-void NRF_rx_up();
-
-uint8_t NRF_read_reg(uint8_t reg);
-void NRF_read_reg_to_buf(uint8_t reg, uint8_t *buf, uint8_t len);
-
-void NRF_write_reg(uint8_t reg, uint8_t data);
-void NRF_write_reg_from_buf(uint8_t reg, uint8_t *buf, uint8_t len);
-
-void NRF_set_tx_address(char *address);
-void NRF_set_rx_address(char *address[]);
-
-void NRF_tx_flush();
-void NRF_rx_flush();
-
-void NRF_set_crc_bytes(uint8_t amount);
-void NRF_set_channel(uint8_t channel);
-void NRF_set_datapipe(uint8_t datapipe, uint8_t pipe_state, uint8_t ack_state);
-void NRF_set_retr(uint8_t time, uint8_t amount);
-void NRF_set_speed_and_power(uint8_t speed, uint8_t power);
-void NRF_set_dyn_payload_on_pipe(uint8_t datapipe, uint8_t state);
-void NRF_set_dyn_payload(uint8_t state);
 
 #endif

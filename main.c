@@ -1,52 +1,49 @@
 #include <avr/io.h>
+#include <avr/interrupt.h>
 
-#include "NRF24L01.h"
+#include <util/delay.h>
 
-#define RX 0 // INTEGRATED
-#define TX 1 // LEONARDO
-
-#define MODE TX
-
-#if MODE == RX
 #include "uart.h"
-#endif
+#include "spi.h"
+#include "nrf24l01.h"
 
-void nrf24l01_receive_handler(void *buf, uint8_t len)
+void rx(void *buf, uint8_t len)
 {
-#if MODE == RX
-	uart_putbuf(buf, len, "HANDLER");
-#endif
+	char *data = buf;
+
+	uart_puts("len: ");
+	uart_putd(len);
+	uart_puts(" : ");
+	for (uint8_t i = 0; i < len; i++)
+		uart_putc(data[i]);
+	uart_puts("\r\n");
 }
 
 int main(void)
 {
-#if MODE == TX
-	DDRC |= (1 << PC7);
-	PORTC &= ~(1 << PC7);
+	_delay_ms(5000);
 
-#elif MODE == RX
-	char buf[128];
 	uart_init();
 	sei();
+	uart_puts("starting....\r\n");
 
-	_delay_ms(3000);
-	uart_puts("STARTED...\r\n");
-#endif
+	// register_nrf_rx_event_callback(rx);
+	nrf24l01_init();
+	// nrf24l01_rx_up();
 
-	SPI_init();
-
-	register_nrf_rx_event_callback(nrf24l01_receive_handler);
-	NRF_init();
-
+	uart_puts("running...\r\n");
+	uint8_t buf[5] = {'c', 'n', 't', ':', '0'};
+	uint8_t len = 1;
 	while (1)
 	{
-
-#if MODE == TX
+		// nrf24l01_event();
 		_delay_ms(1000);
-		NRF_puts("HELLO", 5);
-		PORTC ^= (1 << PC7);
-#elif MODE == RX
-		NRF_rx_event(buf);
-#endif
+		nrf24l01_puts(buf, len++);
+
+		buf[4] = (((buf[4] - '0') + 1) % 10) + '0';
+		if (len > 5)
+			len = 1;
 	}
+
+	return 0;
 }

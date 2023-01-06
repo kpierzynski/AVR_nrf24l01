@@ -1,29 +1,35 @@
-#ifndef __SPI_H_
-#define __SPI_H_
+// spi.h
+#ifndef SPI_H
+#define SPI_H
 
 #include <avr/io.h>
+#include <util/atomic.h>
 
-#define SCK (1 << PB5)
-#define DDR_SCK DDRB
-#define PORT_SCK PORTB
+#define SCK PB5
+#define MISO PB4
+#define MOSI PB3
+#define SS PB1
 
-#define MOSI (1 << PB3)
 #define DDR_MOSI DDRB
 #define PORT_MOSI PORTB
+#define PIN_MOSI PINB
 
-#define MISO (1 << PB4)
 #define DDR_MISO DDRB
 #define PORT_MISO PORTB
+#define PIN_MISO PINB
 
-#define SS (1 << PB1)
+#define DDR_SCK DDRB
+#define PORT_SCK PORTB
+#define PIN_SCK PINB
+
 #define DDR_SS DDRB
 #define PORT_SS PORTB
+#define PIN_SS PINB
 
-void SPI_init();
-
-void SPI_ss_set(uint8_t state);
-void SPI_w_byte(uint8_t byte);
-uint8_t SPI_rw_byte(uint8_t byte);
-void SPI_rw_buffer(uint8_t *rbuf, uint8_t *wbuf, uint8_t len);
+void spi_init(void);
+void spi_write_byte(uint8_t data);
+uint8_t spi_read_byte(void);
+uint8_t spi_read_write_byte(uint8_t data);
+void spi_write_read_buf(uint8_t *write_buf, uint8_t *read_buf, uint8_t len);
 
 #endif
